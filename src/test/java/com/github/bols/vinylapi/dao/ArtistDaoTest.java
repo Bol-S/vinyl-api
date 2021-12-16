@@ -50,14 +50,6 @@ class ArtistDaoTest {
         assertNull(artist.getRealName());
     }
 
-    @Test
-    void testFindByGroup() {
-        List<Artist> artists = artistDao.findByGroup("Onyx");
-
-        assertNotNull(artists);
-        assertEquals(2, artists.size());
-    }
-
     @Order(1)
     @Test
     void testSave() {

@@ -1,6 +1,7 @@
 package com.github.bols.vinylapi.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Table(name = "artists")
 @Entity
@@ -56,5 +57,18 @@ public class Artist {
                 ", name='" + name + '\'' +
                 ", realName='" + realName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Artist artist = (Artist) o;
+        return Objects.equals(id, artist.id) && Objects.equals(name, artist.name) && Objects.equals(realName, artist.realName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, realName);
     }
 }

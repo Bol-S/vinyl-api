@@ -1,6 +1,7 @@
 package com.github.bols.vinylapi.model;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Table(name = "albums", indexes = {
         @Index(name = "fk_albums_artists_idx", columnList = "artist_id"),
@@ -29,6 +30,18 @@ public class Album {
     @ManyToOne(optional = false)
     @JoinColumn(name = "condition_id", nullable = false)
     private Condition condition;
+
+    public Album() {
+    }
+
+    public Album(Integer id, String name, Integer year, String label, Artist artist, Condition condition) {
+        this.id = id;
+        this.name = name;
+        this.year = year;
+        this.label = label;
+        this.artist = artist;
+        this.condition = condition;
+    }
 
     public Condition getCondition() {
         return condition;
@@ -76,5 +89,30 @@ public class Album {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Album{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", year=" + year +
+                ", label='" + label + '\'' +
+                ", artist=" + artist +
+                ", condition=" + condition +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Album album = (Album) o;
+        return Objects.equals(id, album.id) && Objects.equals(name, album.name) && Objects.equals(year, album.year) && Objects.equals(label, album.label) && Objects.equals(artist, album.artist) && Objects.equals(condition, album.condition);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, year, label, artist, condition);
     }
 }

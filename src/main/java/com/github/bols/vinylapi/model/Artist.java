@@ -13,8 +13,17 @@ public class Artist {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "real_name", nullable = false, length = 100)
+    @Column(name = "real_name", length = 100)
     private String realName;
+
+    public Artist() {
+    }
+
+    public Artist(Integer id, String name, String realName) {
+        this.id = id;
+        this.name = name;
+        this.realName = realName;
+    }
 
     public Integer getId() {
         return id;
@@ -38,5 +47,14 @@ public class Artist {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    @Override
+    public String toString() {
+        return "Artist{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", realName='" + realName + '\'' +
+                '}';
     }
 }

@@ -3,9 +3,9 @@ package com.github.bols.vinylapi.model;
 import javax.persistence.*;
 import java.util.Set;
 
-@Table(name = "`groups`")
+@Table(name = "music_groups")
 @Entity
-public class Group {
+public class MusicGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id", nullable = false)

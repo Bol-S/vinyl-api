@@ -59,14 +59,6 @@ class ArtistDaoTest {
         assertEquals(7, artist.getId());
         assertEquals("A Tribe Called Quest", artist.getName());
         assertNull(artist.getRealName());
-
-
-        Artist foundArtist = artistDao.findByName("A Tribe Called Quest").orElseThrow();
-
-        assertNotNull(foundArtist);
-        assertEquals(7, foundArtist.getId());
-        assertEquals("A Tribe Called Quest", foundArtist.getName());
-        assertNull(foundArtist.getRealName());
     }
 
     @Order(2)

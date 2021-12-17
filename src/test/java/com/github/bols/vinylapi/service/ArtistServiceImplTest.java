@@ -65,11 +65,6 @@ class ArtistServiceImplTest {
 
         assertThrows(NoSuchElementException.class, () -> artistService.findById(9));
 
-        assertThrows(InvalidParameterException.class, () -> artistService.findById(null));
-        assertThrows(InvalidParameterException.class, () -> artistService.findById(0));
-        assertThrows(InvalidParameterException.class, () -> artistService.findById(-1));
-        assertThrows(InvalidParameterException.class, () -> artistService.findById(-1000));
-
         verify(artistDao, times(3)).findById(any());
     }
 
@@ -91,9 +86,6 @@ class ArtistServiceImplTest {
         assertEquals("William Hines", artist6.getRealName());
 
         assertThrows(NoSuchElementException.class, () -> artistService.findByName("Jerobi"));
-
-        assertThrows(InvalidParameterException.class, () -> artistService.findByName(null));
-        assertThrows(InvalidParameterException.class, () -> artistService.findByName(""));
 
         verify(artistDao, times(3)).findByName(any());
     }
@@ -118,8 +110,6 @@ class ArtistServiceImplTest {
         assertTrue(artists2.contains(TestData.SampleArtist.getArtist06().orElseThrow()));
 
         assertThrows(NoSuchElementException.class, () -> artistService.findByGroup("A Tribe Called Quest"));
-        assertThrows(InvalidParameterException.class, () -> artistService.findByGroup(null));
-        assertThrows(InvalidParameterException.class, () -> artistService.findByGroup(""));
 
         verify(musicGroupDao, times(3)).findByName(any());
         verify(artistDao, never()).findByName(any());
@@ -143,11 +133,6 @@ class ArtistServiceImplTest {
         assertNull(savedArtist.getRealName());
 
 
-        assertThrows(InvalidParameterException.class, () -> artistService.save(null));
-
-        Artist nullArtist = new Artist(null, null, null);
-        assertThrows(InvalidParameterException.class, () -> artistService.save(nullArtist));
-
         Artist duplicatedArtist = TestData.SampleArtist.getArtist01().orElseThrow();
         when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
         assertThrows(InvalidParameterException.class, () -> artistService.save(duplicatedArtist));
@@ -163,12 +148,6 @@ class ArtistServiceImplTest {
         when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
         artistService.delete(artistToDelete);
         verify(artistDao).delete(artistToDelete);
-
-
-        assertThrows(InvalidParameterException.class, () -> artistService.delete(null));
-
-        Artist nullArtist = new Artist(null, null, null);
-        assertThrows(InvalidParameterException.class, () -> artistService.delete(nullArtist));
 
         Artist fakeArtist = new Artist(null, "A Tribe Called Quest", null);
         assertThrows(NoSuchElementException.class, () -> artistService.delete(fakeArtist));

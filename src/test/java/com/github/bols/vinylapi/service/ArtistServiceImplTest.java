@@ -4,7 +4,6 @@ import com.github.bols.vinylapi.TestData;
 import com.github.bols.vinylapi.dao.ArtistDao;
 import com.github.bols.vinylapi.dao.MusicGroupDao;
 import com.github.bols.vinylapi.model.Artist;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -103,38 +102,75 @@ class ArtistServiceImplTest {
     void testFindByGroup() {
 
         when(musicGroupDao.findByName("Onyx")).thenReturn(TestData.SampleMusicGroup.getMusicGroup01());
-        when(musicGroupDao.findByName("Das Efx")).thenReturn(TestData.SampleMusicGroup.getMusicGroup01());
+        when(musicGroupDao.findByName("Das Efx")).thenReturn(TestData.SampleMusicGroup.getMusicGroup02());
         when(musicGroupDao.findByName("A Tribe Called Quest")).thenThrow(NoSuchElementException.class);
 
         List<Artist> artists1 = artistService.findByGroup("Onyx");
         assertNotNull(artists1);
         assertEquals(2, artists1.size());
-        assertEquals(2, artists1.get(0).getId());
-        assertEquals("Fredro Starr", artists1.get(1).getName());
+        assertTrue(artists1.contains(TestData.SampleArtist.getArtist02().orElseThrow()));
+        assertTrue(artists1.contains(TestData.SampleArtist.getArtist03().orElseThrow()));
 
         List<Artist> artists2 = artistService.findByGroup("Das Efx");
         assertNotNull(artists2);
         assertEquals(2, artists2.size());
-        assertEquals(5, artists2.get(0).getId());
-        assertEquals("Skoob", artists2.get(1).getName());
+        assertTrue(artists2.contains(TestData.SampleArtist.getArtist05().orElseThrow()));
+        assertTrue(artists2.contains(TestData.SampleArtist.getArtist06().orElseThrow()));
 
         assertThrows(NoSuchElementException.class, () -> artistService.findByGroup("A Tribe Called Quest"));
         assertThrows(InvalidParameterException.class, () -> artistService.findByGroup(null));
         assertThrows(InvalidParameterException.class, () -> artistService.findByGroup(""));
 
-        verify(musicGroupDao, times(2)).findByName(any());
+        verify(musicGroupDao, times(3)).findByName(any());
         verify(artistDao, never()).findByName(any());
     }
 
-    @Disabled
     @Test
     void testSave() {
-        
+
+        Artist artist = new Artist(null, "A Tribe Called Quest", null);
+        when(artistDao.save(artist)).then(invocation -> {
+            Artist a = invocation.getArgument(0);
+            a.setId(7);
+            return a;
+        });
+
+        Artist savedArtist = artistService.save(artist);
+
+        assertNotNull(savedArtist);
+        assertEquals(7, savedArtist.getId());
+        assertEquals("A Tribe Called Quest", savedArtist.getName());
+        assertNull(savedArtist.getRealName());
+
+
+        assertThrows(InvalidParameterException.class, () -> artistService.save(null));
+
+        Artist nullArtist = new Artist(null, null, null);
+        assertThrows(InvalidParameterException.class, () -> artistService.save(nullArtist));
+
+        Artist duplicatedArtist = TestData.SampleArtist.getArtist01().orElseThrow();
+        when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
+        assertThrows(InvalidParameterException.class, () -> artistService.save(duplicatedArtist));
+
+        Artist duplicatedNameArtist = new Artist(null, "Onyx", null);
+        assertThrows(InvalidParameterException.class, () -> artistService.save(duplicatedNameArtist));
     }
 
-    @Disabled
     @Test
     void testDelete() {
 
+        Artist artistToDelete = TestData.SampleArtist.getArtist01().orElseThrow();
+        when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
+        artistService.delete(artistToDelete);
+        verify(artistDao).delete(artistToDelete);
+
+
+        assertThrows(InvalidParameterException.class, () -> artistService.delete(null));
+
+        Artist nullArtist = new Artist(null, null, null);
+        assertThrows(InvalidParameterException.class, () -> artistService.delete(nullArtist));
+
+        Artist fakeArtist = new Artist(null, "A Tribe Called Quest", null);
+        assertThrows(NoSuchElementException.class, () -> artistService.delete(fakeArtist));
     }
 }

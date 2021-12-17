@@ -3,7 +3,6 @@ package com.github.bols.vinylapi.service;
 import com.github.bols.vinylapi.model.Artist;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ArtistService {
 

@@ -42,16 +42,16 @@ public class TestData {
 
     public static class SampleMusicGroup{
 
-        public static MusicGroup getMusicGroup01(){
-            return new MusicGroup(1, "Onyx", Set.of(SampleArtist.getArtist02().orElseThrow(), SampleArtist.getArtist03().orElseThrow()));
+        public static Optional<MusicGroup> getMusicGroup01(){
+            return Optional.of(new MusicGroup(1, "Onyx", Set.of(SampleArtist.getArtist02().orElseThrow(), SampleArtist.getArtist03().orElseThrow())));
         }
 
-        public static MusicGroup getMusicGroup02(){
-            return new MusicGroup(2, "Das Efx", Set.of(SampleArtist.getArtist05().orElseThrow(), SampleArtist.getArtist06().orElseThrow()));
+        public static Optional<MusicGroup> getMusicGroup02(){
+            return Optional.of(new MusicGroup(2, "Das Efx", Set.of(SampleArtist.getArtist05().orElseThrow(), SampleArtist.getArtist06().orElseThrow())));
         }
 
         public static List<MusicGroup> getAllMusicGroups(){
-            return Arrays.asList(getMusicGroup01(), getMusicGroup02());
+            return Arrays.asList(getMusicGroup01().orElseThrow(), getMusicGroup02().orElseThrow());
         }
     }
 

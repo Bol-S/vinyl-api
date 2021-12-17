@@ -99,7 +99,7 @@ public class Album {
                 ", year=" + releaseYear +
                 ", label='" + label + '\'' +
                 ", artist=" + artist +
-                ", condition=" + condition +
+                ", condition=" + condition.getName() +
                 '}';
     }
 

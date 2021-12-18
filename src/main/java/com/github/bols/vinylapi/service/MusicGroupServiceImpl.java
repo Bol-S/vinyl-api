@@ -7,7 +7,9 @@ import com.github.bols.vinylapi.model.MusicGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class MusicGroupServiceImpl implements MusicGroupService {
@@ -42,29 +44,55 @@ public class MusicGroupServiceImpl implements MusicGroupService {
         Artist foundArtist = artistDao.findByName(artist).orElseThrow();
 
         // Artist only have real name if they are solo, not a group. Groups have null values on real name field
-        if (foundArtist.getRealName() == null)
+        if (foundArtist.getRealName() == null) {
             return musicGroupDao.findByName(artist).orElseThrow();
+        }
 
         List<MusicGroup> musicGroups = (List<MusicGroup>) musicGroupDao.findAll();
 
         return musicGroups.stream()
-                .filter(g -> g.getMiembros().contains(foundArtist))
+                .filter(g -> g.getMembers().contains(foundArtist))
                 .findFirst()
                 .orElseThrow();
     }
 
     @Override
-    public void linkArtist(Integer musicGroupId, Integer artistId) {
+    public void linkArtistToGroup(Integer musicGroupId, Integer artistId) {
 
+        Artist artist = artistDao.findById(artistId).orElseThrow();
+
+        // Artist only have real name if they are solo, not a group. Groups have null values on real name field
+        if (artist.getRealName() == null) {
+            throw new InvalidParameterException("Artist cannot be a group");
+        }
+
+        MusicGroup group = musicGroupDao.findById(musicGroupId).orElseThrow();
+
+        if (group.getMembers().stream().anyMatch(m -> m.getId().equals(artist.getId()))) {
+            throw new InvalidParameterException("Artist is already in the group");
+        }
+
+        group.addMember(artist);
+        musicGroupDao.save(group);
     }
 
     @Override
     public MusicGroup save(MusicGroup musicGroup) {
-        return null;
+
+        if (musicGroupDao.findByName(musicGroup.getName()).isPresent()) {
+            throw new InvalidParameterException("Group already exists");
+        }
+
+        return musicGroupDao.save(musicGroup);
     }
 
     @Override
     public void delete(MusicGroup musicGroup) {
 
+        if (musicGroupDao.findByName(musicGroup.getName()).isEmpty()){
+            throw new NoSuchElementException("Group not found");
+        }
+
+        musicGroupDao.delete(musicGroup);
     }
 }

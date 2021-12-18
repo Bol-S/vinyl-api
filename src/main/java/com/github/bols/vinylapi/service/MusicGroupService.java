@@ -15,7 +15,7 @@ public interface MusicGroupService {
 
     MusicGroup findByArtist(String artist);
 
-    void linkArtist(Integer musicGroupId, Integer artistId);
+    void linkArtistToGroup(Integer musicGroupId, Integer artistId);
 
     MusicGroup save(MusicGroup musicGroup);
 

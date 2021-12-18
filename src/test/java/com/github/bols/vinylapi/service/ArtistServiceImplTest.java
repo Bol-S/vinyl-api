@@ -124,6 +124,9 @@ class ArtistServiceImplTest {
             a.setId(7);
             return a;
         });
+        Artist duplicatedArtist = TestData.SampleArtist.getArtist01().orElseThrow();
+        Artist duplicatedNameArtist = new Artist(null, "Onyx", null);
+        when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
 
         Artist savedArtist = artistService.save(artist);
 
@@ -132,12 +135,8 @@ class ArtistServiceImplTest {
         assertEquals("A Tribe Called Quest", savedArtist.getName());
         assertNull(savedArtist.getRealName());
 
-
-        Artist duplicatedArtist = TestData.SampleArtist.getArtist01().orElseThrow();
-        when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
         assertThrows(InvalidParameterException.class, () -> artistService.save(duplicatedArtist));
 
-        Artist duplicatedNameArtist = new Artist(null, "Onyx", null);
         assertThrows(InvalidParameterException.class, () -> artistService.save(duplicatedNameArtist));
     }
 
@@ -146,10 +145,12 @@ class ArtistServiceImplTest {
 
         Artist artistToDelete = TestData.SampleArtist.getArtist01().orElseThrow();
         when(artistDao.findByName("Onyx")).thenReturn(TestData.SampleArtist.getArtist01());
-        artistService.delete(artistToDelete);
-        verify(artistDao).delete(artistToDelete);
-
         Artist fakeArtist = new Artist(null, "A Tribe Called Quest", null);
+
+        artistService.delete(artistToDelete);
+
         assertThrows(NoSuchElementException.class, () -> artistService.delete(fakeArtist));
+
+        verify(artistDao).delete(artistToDelete);
     }
 }

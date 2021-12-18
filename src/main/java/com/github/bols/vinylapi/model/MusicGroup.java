@@ -1,8 +1,7 @@
 package com.github.bols.vinylapi.model;
 
 import javax.persistence.*;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Table(name = "music_groups")
 @Entity
@@ -27,7 +26,7 @@ public class MusicGroup {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "artist_id")
     )
-    private Set<Artist> miembros;
+    private Set<Artist> members;
 
     public MusicGroup() {
     }
@@ -35,7 +34,17 @@ public class MusicGroup {
     public MusicGroup(Integer id, String name, Set<Artist> miembros) {
         this.id = id;
         this.name = name;
-        this.miembros = miembros;
+
+        if (miembros == null){
+            miembros = new HashSet<>();
+        }
+        this.members = miembros;
+    }
+
+    public void addMember(Artist artist){
+        List<Artist> memberList = new ArrayList<>(members);
+        memberList.add(artist);
+        this.members = new HashSet<>(memberList);
     }
 
     public String getName() {
@@ -54,12 +63,12 @@ public class MusicGroup {
         this.id = id;
     }
 
-    public Set<Artist> getMiembros() {
-        return miembros;
+    public Set<Artist> getMembers() {
+        return members;
     }
 
-    public void setMiembros(Set<Artist> miembros) {
-        this.miembros = miembros;
+    public void setMembers(Set<Artist> members) {
+        this.members = members;
     }
 
     @Override
@@ -67,7 +76,7 @@ public class MusicGroup {
         return "MusicGroup{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", miembros=" + miembros +
+                ", miembros=" + members +
                 '}';
     }
 
@@ -76,11 +85,11 @@ public class MusicGroup {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MusicGroup that = (MusicGroup) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(miembros, that.miembros);
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(members, that.members);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, miembros);
+        return Objects.hash(id, name, members);
     }
 }

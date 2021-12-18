@@ -42,7 +42,7 @@ public class ArtistServiceImpl implements ArtistService {
 
         MusicGroup musicGroup = musicGroupDao.findByName(group).orElseThrow();
 
-        return musicGroup.getMiembros().stream().toList();
+        return musicGroup.getMembers().stream().toList();
     }
 
     @Override

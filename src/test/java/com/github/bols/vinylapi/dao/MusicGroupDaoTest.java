@@ -1,6 +1,5 @@
 package com.github.bols.vinylapi.dao;
 
-import com.github.bols.vinylapi.model.Artist;
 import com.github.bols.vinylapi.model.MusicGroup;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -28,7 +27,7 @@ class MusicGroupDaoTest {
         assertNotNull(groups);
         assertEquals(2, groups.size());
         assertEquals("Onyx", groups.get(0).getName());
-        assertEquals(2, groups.get(1).getMiembros().size());
+        assertEquals(2, groups.get(1).getMembers().size());
     }
 
     @Test

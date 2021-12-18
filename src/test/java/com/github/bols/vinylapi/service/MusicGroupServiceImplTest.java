@@ -3,6 +3,7 @@ package com.github.bols.vinylapi.service;
 import com.github.bols.vinylapi.TestData;
 import com.github.bols.vinylapi.dao.ArtistDao;
 import com.github.bols.vinylapi.dao.MusicGroupDao;
+import com.github.bols.vinylapi.model.Artist;
 import com.github.bols.vinylapi.model.MusicGroup;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -37,10 +39,10 @@ class MusicGroupServiceImplTest {
 
         assertNotNull(groups);
         assertEquals(2, groups.size());
-        assertEquals(2, groups.get(0).getMiembros().size());
-        assertEquals(2, groups.get(1).getMiembros().size());
+        assertEquals(2, groups.get(0).getMembers().size());
+        assertEquals(2, groups.get(1).getMembers().size());
         assertTrue(groups.stream().anyMatch(g -> "Onyx".equals(g.getName())));
-        assertTrue(groups.get(1).getMiembros().stream().anyMatch(a -> "William Hines".equals(a.getRealName())));
+        assertTrue(groups.get(1).getMembers().stream().anyMatch(a -> "William Hines".equals(a.getRealName())));
 
         verify(musicGroupDao).findAll();
     }
@@ -59,10 +61,10 @@ class MusicGroupServiceImplTest {
         assertNotNull(dasefx);
         assertEquals("Onyx", onyx.getName());
         assertEquals("Das Efx", dasefx.getName());
-        assertEquals(2, onyx.getMiembros().size());
-        assertEquals(2, dasefx.getMiembros().size());
-        assertTrue(onyx.getMiembros().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
-        assertTrue(dasefx.getMiembros().stream().anyMatch(a -> 5 == a.getId()));
+        assertEquals(2, onyx.getMembers().size());
+        assertEquals(2, dasefx.getMembers().size());
+        assertTrue(onyx.getMembers().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
+        assertTrue(dasefx.getMembers().stream().anyMatch(a -> 5 == a.getId()));
 
 
         assertThrows(NoSuchElementException.class, () -> musicGroupService.findByName("A Tribe Called Quest"));
@@ -84,10 +86,10 @@ class MusicGroupServiceImplTest {
         assertNotNull(dasefx);
         assertEquals("Onyx", onyx.getName());
         assertEquals("Das Efx", dasefx.getName());
-        assertEquals(2, onyx.getMiembros().size());
-        assertEquals(2, dasefx.getMiembros().size());
-        assertTrue(onyx.getMiembros().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
-        assertTrue(dasefx.getMiembros().stream().anyMatch(a -> 5 == a.getId()));
+        assertEquals(2, onyx.getMembers().size());
+        assertEquals(2, dasefx.getMembers().size());
+        assertTrue(onyx.getMembers().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
+        assertTrue(dasefx.getMembers().stream().anyMatch(a -> 5 == a.getId()));
 
         assertThrows(NoSuchElementException.class, () -> musicGroupService.findById(9));
 
@@ -110,10 +112,10 @@ class MusicGroupServiceImplTest {
         assertNotNull(dasefx);
         assertEquals("Onyx", onyx.getName());
         assertEquals("Das Efx", dasefx.getName());
-        assertEquals(2, onyx.getMiembros().size());
-        assertEquals(2, dasefx.getMiembros().size());
-        assertTrue(onyx.getMiembros().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
-        assertTrue(dasefx.getMiembros().stream().anyMatch(a -> 5 == a.getId()));
+        assertEquals(2, onyx.getMembers().size());
+        assertEquals(2, dasefx.getMembers().size());
+        assertTrue(onyx.getMembers().stream().anyMatch(a -> "Kirk Jones".equals(a.getRealName())));
+        assertTrue(dasefx.getMembers().stream().anyMatch(a -> 5 == a.getId()));
 
         assertThrows(NoSuchElementException.class, () -> musicGroupService.findByArtist("Q-Tip"));
 
@@ -123,19 +125,75 @@ class MusicGroupServiceImplTest {
     }
 
     @Test
-    void testLinkArtist() {
+    void testLinkArtistToGroup() {
+
+        MusicGroup group = TestData.SampleMusicGroup.getMusicGroup01().orElseThrow();
+        Artist newArtist = new Artist(7, "Q-Tip", "Jonathan Davis");
+        MusicGroup groupWithNewMember = TestData.SampleMusicGroup.getMusicGroup01().orElseThrow();
+        groupWithNewMember.addMember(newArtist);
+        Artist groupArtist = new Artist(8, "A Tribe Called Quest", null);
+
+        when(artistDao.findById(1)).thenReturn(TestData.SampleArtist.getArtist01());
+        when(artistDao.findById(2)).thenReturn(TestData.SampleArtist.getArtist02());
+        when(artistDao.findById(7)).thenReturn(java.util.Optional.of(newArtist));
+        when(artistDao.findById(8)).thenReturn(java.util.Optional.of(groupArtist));
+
+        when(musicGroupDao.findById(1)).thenReturn(java.util.Optional.of(group));
+        when(musicGroupDao.save(group)).thenReturn(groupWithNewMember);
 
 
+        musicGroupService.linkArtistToGroup(1, 7);
+
+
+        assertEquals(3, group.getMembers().size());
+        assertTrue(group.getMembers().stream().anyMatch(a -> a.getId() == 7));
+
+        // Try to add artist that is a group, not solo
+        assertThrows(InvalidParameterException.class, () -> musicGroupService.linkArtistToGroup(1, 8));
+
+        // Try to add artist already in group
+        assertThrows(InvalidParameterException.class, () -> musicGroupService.linkArtistToGroup(1, 2));
+
+        verify(musicGroupDao).save(any());
     }
 
-    @Disabled
     @Test
     void testSave() {
 
+        MusicGroup group = new MusicGroup(null, "A Tribe Called Quest", null);
+        when(musicGroupDao.save(group)).then(invocationOnMock -> {
+            group.setId(3);
+            return group;
+        });
+        MusicGroup duplicatedGroup = TestData.SampleMusicGroup.getMusicGroup01().orElseThrow();
+        when(musicGroupDao.findByName("Onyx")).thenReturn(java.util.Optional.of(duplicatedGroup));
+
+
+        MusicGroup savedGroup = musicGroupService.save(group);
+
+
+        assertNotNull(savedGroup);
+        assertEquals(3, savedGroup.getId());
+        assertEquals("A Tribe Called Quest", savedGroup.getName());
+        assertTrue(savedGroup.getMembers().isEmpty());
+
+        assertThrows(InvalidParameterException.class, () -> musicGroupService.save(duplicatedGroup));
+
+        verify(musicGroupDao).save(group);
+        verify(musicGroupDao, times(1)).save(any());
     }
 
-    @Disabled
     @Test
     void testDelete() {
+
+        MusicGroup groupToDelete = TestData.SampleMusicGroup.getMusicGroup01().orElseThrow();
+        when(musicGroupDao.findByName("Onyx")).thenReturn(java.util.Optional.of(groupToDelete));
+        MusicGroup fakeMusicGroup = new MusicGroup(null, "A Tribe Called Quest", null);
+
+        musicGroupService.delete(groupToDelete);
+
+        assertThrows(NoSuchElementException.class, () -> musicGroupService.delete(fakeMusicGroup));
+
+        verify(musicGroupDao).delete(groupToDelete);
     }
 }

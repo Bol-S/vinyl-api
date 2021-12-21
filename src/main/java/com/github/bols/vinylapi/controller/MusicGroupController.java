@@ -1,6 +1,5 @@
 package com.github.bols.vinylapi.controller;
 
-import com.github.bols.vinylapi.model.Artist;
 import com.github.bols.vinylapi.model.MusicGroup;
 import com.github.bols.vinylapi.service.MusicGroupService;
 import org.springframework.beans.factory.annotation.Autowired;

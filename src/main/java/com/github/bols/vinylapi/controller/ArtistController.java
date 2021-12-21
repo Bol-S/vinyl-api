@@ -43,7 +43,6 @@ public class ArtistController {
     public ResponseEntity<?> getArtistById(@PathVariable Integer id) {
 
         try{
-            Integer.parseInt(String.valueOf(id).trim());
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -53,9 +52,6 @@ public class ArtistController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        catch (NumberFormatException exception){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -94,7 +90,6 @@ public class ArtistController {
     public ResponseEntity<?> removeArtist(@PathVariable Integer id){
 
         try {
-            Integer.parseInt(String.valueOf(id).trim());
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -106,9 +101,6 @@ public class ArtistController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        catch (NumberFormatException exception){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 }

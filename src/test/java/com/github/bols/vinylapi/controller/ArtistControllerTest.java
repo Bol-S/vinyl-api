@@ -59,21 +59,23 @@ class ArtistControllerTest {
     @Test
     void testGetArtistByName() throws Exception {
 
+        String endpoint = "/artists/find/name/{name}";
+        
         Artist artist = TestData.SampleArtist.getArtist01().orElseThrow();
         when(artistService.findByName("Onyx")).thenReturn(artist);
         when(artistService.findByName("Jerobi")).thenThrow(NoSuchElementException.class);
 
 
         mockMvc.perform(
-                        get("/artists/find/name/{name}", "Onyx"))
+                        get(endpoint, "Onyx"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(artist)));
 
-        mockMvc.perform(get("/artists/find/name/{name}", "Jerobi").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(endpoint, "Jerobi").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(get("/artists/find/name/{name}", " ").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(endpoint, " ").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
         verify(artistService, times(2)).findByName(any());
@@ -83,33 +85,35 @@ class ArtistControllerTest {
     @Test
     void testGetArtistById() throws Exception {
 
+        String endpoint = "/artists/find/id/{id}";
+        
         Artist artist = TestData.SampleArtist.getArtist01().orElseThrow();
         when(artistService.findById(1)).thenReturn(artist);
         when(artistService.findById(9)).thenThrow(NoSuchElementException.class);
 
 
         mockMvc.perform(
-                        get("/artists/find/id/{id}", 1))
+                        get(endpoint, 1))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(artist)));
 
         mockMvc.perform(
-                        get("/artists/find/id/{id}", "1"))
+                        get(endpoint, "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(artist)));
 
-        mockMvc.perform(get("/artists/find/id/{id}", 9))
+        mockMvc.perform(get(endpoint, 9))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(get("/artists/find/id/{id}", "asdf"))
+        mockMvc.perform(get(endpoint, "asdf"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/artists/find/id/{id}", -1))
+        mockMvc.perform(get(endpoint, -1))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(get("/artists/find/id/{id}", " "))
+        mockMvc.perform(get(endpoint, " "))
                 .andExpect(status().is5xxServerError());
 
         verify(artistService, times(3)).findById(any());
@@ -118,6 +122,8 @@ class ArtistControllerTest {
 
     @Test
     void testGetArtistByGroup() throws Exception {
+        
+        String endpoint = "/artists/find/group/{group}";
 
         List<Artist> artists = Arrays.asList(TestData.SampleArtist.getArtist02().orElseThrow(), TestData.SampleArtist.getArtist03().orElseThrow());
         when(artistService.findByGroup("Onyx")).thenReturn(artists);
@@ -125,15 +131,15 @@ class ArtistControllerTest {
 
 
         mockMvc.perform(
-                        get("/artists/find/group/{group}", "Onyx"))
+                        get(endpoint, "Onyx"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(artists)));
 
-        mockMvc.perform(get("/artists/find/group/{group}", "A Tribe Called Quest").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(endpoint, "A Tribe Called Quest").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(get("/artists/find/group/{group}", " ").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(endpoint, " ").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
         verify(artistService, times(2)).findByGroup(any());
@@ -142,6 +148,8 @@ class ArtistControllerTest {
 
     @Test
     void testAddArtist() throws Exception {
+
+        String endpoint = "/artists";
 
         Artist artist = new Artist(null, "A Tribe Called Quest", null);
         when(artistService.save(artist)).then(invocation -> {
@@ -155,24 +163,24 @@ class ArtistControllerTest {
 
 
         Artist expectedArtist = new Artist(7, "A Tribe Called Quest", null);
-        mockMvc.perform(post("/artists")
+        mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(artist)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(expectedArtist)));
 
-        mockMvc.perform(post("/artists")
+        mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(duplicatedArtist)))
                 .andExpect(status().isConflict());
 
-        mockMvc.perform(post("/artists")
+        mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(badArtist)))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(post("/artists")
+        mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
 
@@ -182,11 +190,13 @@ class ArtistControllerTest {
     @Test
     void testRemoveArtist() throws Exception {
 
+        String endpoint = "/artists/{id}";
+
         when(artistService.findById(1)).thenReturn(TestData.SampleArtist.getArtist01().orElseThrow());
         when(artistService.findById(9)).thenThrow(NoSuchElementException.class);
 
 
-        mockMvc.perform(delete("/artists/{id}", 1))
+        mockMvc.perform(delete(endpoint, 1))
                 .andExpect(status().isOk());
 
 
@@ -197,19 +207,19 @@ class ArtistControllerTest {
         assertEquals(1, userCaptor.getValue().getId());
 
 
-        mockMvc.perform(delete("/artists/{id}", 9))
+        mockMvc.perform(delete(endpoint, 9))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(delete("/artists/{id}", -1))
+        mockMvc.perform(delete(endpoint, -1))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(delete("/artists/{id}", "9"))
+        mockMvc.perform(delete(endpoint, "9"))
                 .andExpect(status().isNotFound());
 
-        mockMvc.perform(delete("/artists/{id}", "asdf"))
+        mockMvc.perform(delete(endpoint, "asdf"))
                 .andExpect(status().isBadRequest());
 
-        mockMvc.perform(delete("/artists/{id}", " "))
+        mockMvc.perform(delete(endpoint, " "))
                 .andExpect(status().is5xxServerError());
     }
 }

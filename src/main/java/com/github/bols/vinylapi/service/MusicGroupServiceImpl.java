@@ -6,6 +6,7 @@ import com.github.bols.vinylapi.model.Artist;
 import com.github.bols.vinylapi.model.MusicGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.InvalidParameterException;
 import java.util.List;
@@ -21,24 +22,28 @@ public class MusicGroupServiceImpl implements MusicGroupService {
     private ArtistDao artistDao;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MusicGroup> findAll() {
 
         return (List<MusicGroup>) musicGroupDao.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MusicGroup findByName(String name) {
 
         return musicGroupDao.findByName(name).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MusicGroup findById(Integer id) {
 
         return musicGroupDao.findById(id).orElseThrow();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MusicGroup findByArtist(String artist) {
 
         Artist foundArtist = artistDao.findByName(artist).orElseThrow();
@@ -57,6 +62,7 @@ public class MusicGroupServiceImpl implements MusicGroupService {
     }
 
     @Override
+    @Transactional
     public void linkArtistToGroup(Integer musicGroupId, Integer artistId) {
 
         Artist artist = artistDao.findById(artistId).orElseThrow();
@@ -77,6 +83,7 @@ public class MusicGroupServiceImpl implements MusicGroupService {
     }
 
     @Override
+    @Transactional
     public MusicGroup save(MusicGroup musicGroup) {
 
         if (musicGroupDao.findByName(musicGroup.getName()).isPresent()) {
@@ -87,6 +94,7 @@ public class MusicGroupServiceImpl implements MusicGroupService {
     }
 
     @Override
+    @Transactional
     public void delete(MusicGroup musicGroup) {
 
         if (musicGroupDao.findByName(musicGroup.getName()).isEmpty()){

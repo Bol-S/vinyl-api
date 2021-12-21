@@ -24,7 +24,7 @@ public class Album {
     @Column(name = "label", length = 100)
     private String label;
 
-    @Column(name = "condition", length = 100)
+    @Column(name = "`condition`", length = 100)
     private Condition condition;
 
     @ManyToOne(optional = false)

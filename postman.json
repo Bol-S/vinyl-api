@@ -1,0 +1,428 @@
+{
+	"info": {
+		"_postman_id": "1189f6af-0497-4cf9-a51d-64435cb15c9d",
+		"name": "vinyl-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Artists",
+			"item": [
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/artists",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/artists/find/name/onyx",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists",
+								"find",
+								"name",
+								"onyx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/artists/find/id/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists",
+								"find",
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByGroup",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/artists/find/group/onyx",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists",
+								"find",
+								"group",
+								"onyx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"name\": \"A Tribe Called Quest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/artists",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/artists/9",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"artists",
+								"9"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/find/name/onyx",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"find",
+								"name",
+								"onyx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/find/id/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"find",
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByArtist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/find/artist/Fredro Starr",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"find",
+								"artist",
+								"Fredro Starr"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LinkArtistToGroup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/link/1/5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"link",
+								"1",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A Tribe Called Quest\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/groups",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/groups/4",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"groups",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Albums",
+			"item": [
+				{
+					"name": "FindAll",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums/find/name/bacdafucup",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums",
+								"find",
+								"name",
+								"bacdafucup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums/find/id/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums",
+								"find",
+								"id",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByLabel",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums/find/label/JMJ",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums",
+								"find",
+								"label",
+								"JMJ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FindByArtist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums/find/artist/onyx",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums",
+								"find",
+								"artist",
+								"onyx"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Hold It Down\",\n    \"releaseYear\": 1995,\n    \"label\": \"EastWest Records America\",\n    \"condition\": \"GOOD\",\n    \"artist\": {\n        \"id\": 4,\n        \"name\": \"Das Efx\",\n        \"realName\": null\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/albums",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/albums/13",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"albums",
+								"13"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

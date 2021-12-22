@@ -40,9 +40,14 @@ public class MusicGroupController {
     }
 
     @GetMapping("/find/id/{id}")
-    public ResponseEntity<?> getGroupById(@PathVariable Integer id){
+    public ResponseEntity<?> getGroupById(@PathVariable(required = false) Integer id){
 
         try{
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -52,6 +57,9 @@ public class MusicGroupController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException | NumberFormatException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -72,13 +80,25 @@ public class MusicGroupController {
     }
 
     @PostMapping("/link/{groupId}/{artistId}")
-    public ResponseEntity<?> linkArtistToGroup(@PathVariable Integer groupId, @PathVariable Integer artistId){
-
-        if (groupId < 1 || artistId < 1){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<?> linkArtistToGroup(@PathVariable(required = false) Integer groupId, @PathVariable(required = false) Integer artistId){
 
         try {
+            if (groupId == null || artistId == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            groupId = Integer.parseInt(String.valueOf(groupId));
+            artistId = Integer.parseInt(String.valueOf(artistId));
+
+        }
+        catch (InvalidParameterException | NumberFormatException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            if (groupId < 1 || artistId < 1){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
             groupService.linkArtistToGroup(groupId, artistId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -106,9 +126,14 @@ public class MusicGroupController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeGroup(@PathVariable Integer id){
+    public ResponseEntity<?> removeGroup(@PathVariable(required = false) Integer id){
 
         try {
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -120,6 +145,9 @@ public class MusicGroupController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException | NumberFormatException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
         }
     }
 

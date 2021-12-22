@@ -40,9 +40,15 @@ public class ArtistController {
     }
 
     @GetMapping("/find/id/{id}")
-    public ResponseEntity<?> getArtistById(@PathVariable Integer id) {
+    public ResponseEntity<?> getArtistById(@PathVariable(required = false) Integer id) {
 
         try{
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -52,6 +58,9 @@ public class ArtistController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException | NumberFormatException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -82,14 +91,19 @@ public class ArtistController {
             return new ResponseEntity<>(artistService.save(artist), HttpStatus.CREATED);
         }
         catch (InvalidParameterException exception){
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeArtist(@PathVariable Integer id){
+    public ResponseEntity<?> removeArtist(@PathVariable(required = false) Integer id){
 
         try {
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -101,6 +115,9 @@ public class ArtistController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException | NumberFormatException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

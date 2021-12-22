@@ -127,7 +127,6 @@ class AlbumControllerTest {
                                         TestData.SampleAlbum.getAlbum02().orElseThrow(),
                                         TestData.SampleAlbum.getAlbum03().orElseThrow());
         when(albumService.findByLabel("JMJ")).thenReturn(albums);
-        when(albumService.findByLabel("Interscope")).thenThrow(NoSuchElementException.class);
 
 
         mockMvc.perform(
@@ -137,7 +136,9 @@ class AlbumControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(albums)));
 
         mockMvc.perform(get(endpoint, "Interscope").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json("[]"));
 
         mockMvc.perform(get(endpoint, " ").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

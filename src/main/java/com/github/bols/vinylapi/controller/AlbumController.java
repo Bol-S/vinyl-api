@@ -45,9 +45,14 @@ public class AlbumController {
     }
 
     @GetMapping("/find/id/{id}")
-    public ResponseEntity<?> getAlbumById(@PathVariable Integer id){
+    public ResponseEntity<?> getAlbumById(@PathVariable(required = false) Integer id){
 
         try{
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -57,6 +62,9 @@ public class AlbumController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -109,9 +117,14 @@ public class AlbumController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeAlbum(@PathVariable Integer id){
+    public ResponseEntity<?> removeAlbum(@PathVariable(required = false) Integer id){
 
         try {
+            if (id == null) {
+                throw new InvalidParameterException("Missing id");
+            }
+            id = Integer.parseInt(String.valueOf(id));
+
             if (id < 1){
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
@@ -123,6 +136,9 @@ public class AlbumController {
         }
         catch (NoSuchElementException exception){
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

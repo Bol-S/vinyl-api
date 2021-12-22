@@ -6,3 +6,5 @@ In the root of the repository you can find a Postman.json collection for the sak
 
 It is also deployed in a testing environment in the following URL: http://vps675475.ovh.net:9000/api/v1/collection
 You can use this as your {{baseUrl}} for testing.
+
+Swagger available at http://vps675475.ovh.net:9000/api/v1/collection/swagger-ui/

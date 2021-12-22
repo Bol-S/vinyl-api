@@ -107,7 +107,7 @@ class MusicGroupControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(get(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
 
         verify(groupService, times(3)).findById(any());
     }
@@ -159,10 +159,10 @@ class MusicGroupControllerTest {
 
 
         mockMvc.perform(post(endpoint, " ", 2))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(post(endpoint, 2, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
 
         verify(groupService, times(1)).linkArtistToGroup(any(), any());
     }
@@ -241,6 +241,6 @@ class MusicGroupControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(delete(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 }

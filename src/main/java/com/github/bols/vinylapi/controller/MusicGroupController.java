@@ -147,7 +147,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
         catch (InvalidParameterException | NumberFormatException exception){
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

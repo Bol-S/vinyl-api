@@ -112,7 +112,7 @@ class AlbumControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(get(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
 
         verify(albumService, times(3)).findById(any());
     }
@@ -262,6 +262,6 @@ class AlbumControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(delete(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 }

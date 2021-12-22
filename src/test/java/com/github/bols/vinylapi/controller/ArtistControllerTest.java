@@ -114,7 +114,7 @@ class ArtistControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(get(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
 
         verify(artistService, times(3)).findById(any());
 
@@ -173,7 +173,7 @@ class ArtistControllerTest {
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(duplicatedArtist)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isBadRequest());
 
         mockMvc.perform(post(endpoint)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -220,6 +220,6 @@ class ArtistControllerTest {
                 .andExpect(status().isBadRequest());
 
         mockMvc.perform(delete(endpoint, " "))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 }

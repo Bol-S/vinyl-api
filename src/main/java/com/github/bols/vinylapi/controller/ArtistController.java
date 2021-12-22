@@ -35,7 +35,7 @@ public class ArtistController {
             return new ResponseEntity<>(artistService.findByName(name), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -51,7 +51,7 @@ public class ArtistController {
             return new ResponseEntity<>(artist, HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -67,7 +67,7 @@ public class ArtistController {
             return new ResponseEntity<>(artistService.findByGroup(group), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -82,7 +82,7 @@ public class ArtistController {
             return new ResponseEntity<>(artistService.save(artist), HttpStatus.CREATED);
         }
         catch (InvalidParameterException exception){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -100,7 +100,7 @@ public class ArtistController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

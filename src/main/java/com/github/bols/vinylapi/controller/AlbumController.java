@@ -40,7 +40,7 @@ public class AlbumController {
             return new ResponseEntity<>(albumService.findByName(name), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -56,7 +56,7 @@ public class AlbumController {
             return new ResponseEntity<>(album, HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -67,12 +67,7 @@ public class AlbumController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        try{
-            return new ResponseEntity<>(albumService.findByLabel(label), HttpStatus.OK);
-        }
-        catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return new ResponseEntity<>(albumService.findByLabel(label), HttpStatus.OK);
     }
 
     @GetMapping("/find/artist/{artist}")
@@ -87,7 +82,7 @@ public class AlbumController {
             return new ResponseEntity<>(albumService.findByArtist(oArtist), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -98,7 +93,7 @@ public class AlbumController {
             try {
                 return new ResponseEntity<>(albumService.save(album), HttpStatus.CREATED);
             } catch (InvalidParameterException exception) {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
+                return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
             }
         }
         else{
@@ -127,7 +122,7 @@ public class AlbumController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 }

@@ -35,7 +35,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(groupService.findByName(name), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -51,7 +51,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(musicGroup, HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
@@ -67,7 +67,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(groupService.findByArtist(artist), HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -78,8 +78,16 @@ public class MusicGroupController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        groupService.linkArtistToGroup(groupId, artistId);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            groupService.linkArtistToGroup(groupId, artistId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NoSuchElementException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (InvalidParameterException exception){
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @PostMapping
@@ -93,7 +101,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(groupService.save(musicGroup), HttpStatus.CREATED);
         }
         catch (InvalidParameterException exception){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
@@ -111,7 +119,7 @@ public class MusicGroupController {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NoSuchElementException exception){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
